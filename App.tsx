@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -7,16 +7,45 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
 import ChatWidget from './components/ChatWidget';
+import ProjectDetails from './components/ProjectDetails';
+import ResumeView from './components/ResumeView';
+import { PROJECTS } from './data/profile';
+
+type ViewState = 'home' | 'resume' | { type: 'project', id: string };
 
 function App() {
+  const [view, setView] = useState<ViewState>('home');
+
+  const handleNavigate = (target: ViewState) => {
+    setView(target);
+  };
+
+  const getCurrentProject = () => {
+    if (typeof view === 'object' && view.type === 'project') {
+      return PROJECTS.find(p => p.id === view.id);
+    }
+    return null;
+  };
+
+  if (view === 'resume') {
+    return <ResumeView onBack={() => setView('home')} />;
+  }
+
+  if (typeof view === 'object' && view.type === 'project') {
+    const project = getCurrentProject();
+    if (project) {
+      return <ProjectDetails project={project} onBack={() => setView('home')} />;
+    }
+  }
+
   return (
     <div className="bg-background min-h-screen text-slate-200 selection:bg-primary/30 selection:text-white">
-      <Navbar />
+      <Navbar onNavigate={handleNavigate} />
       <main>
-        <Hero />
+        <Hero onNavigate={handleNavigate} />
         <About />
         <Experience />
-        <Projects />
+        <Projects onNavigate={handleNavigate} />
         <Skills />
         <Contact />
       </main>

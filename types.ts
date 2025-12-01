@@ -1,11 +1,15 @@
 export interface Project {
   id: string;
   title: string;
+  company: string; // Added for context
+  role: string;    // Added for context
+  timeline: string; // Added for context
   description: string;
   techStack: string[];
   link?: string;
   github?: string;
   imageUrl: string;
+  bullets: string[]; // Detailed metrics/points from resume
 }
 
 export interface Experience {
